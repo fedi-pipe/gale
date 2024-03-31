@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gale/core/base.dart';
+import 'package:gale/core/widget_base.dart';
 
 class GaleColor extends GalePredicate {
   @override
@@ -31,14 +32,16 @@ class GaleColorText extends GaleColor {
   static get blue => GaleColorText(Colors.blue);
 }
 
-mixin hasBgColor {
-  late List<GalePredicate> predicates;
+abstract class IGaleColor extends GaleWidget {}
 
+abstract class IGaleBgColor extends IGaleColor {}
+
+abstract class IGaleTextColor extends IGaleColor {}
+
+extension BgColorExtension on IGaleBgColor {
   Color get bgColor => predicates.lastWhere((e) => e is GaleColorBg, orElse: () => GaleColorBg()).value;
 }
 
-mixin hasTextColor {
-  late List<GalePredicate> predicates;
-
+extension TextColorExtension on IGaleTextColor {
   Color get textColor => predicates.lastWhere((e) => e is GaleColorText, orElse: () => GaleColorText()).value;
 }

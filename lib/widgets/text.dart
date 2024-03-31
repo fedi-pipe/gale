@@ -33,8 +33,6 @@ class GaleFontWeight extends GalePredicate {
   static get w900 => GaleFontWeight(FontWeight.w900);
 }
 
-mixin hasFontWeight {
-  late List<GalePredicate> predicates;
 class GaleFontSize extends GalePredicate {
   @override
   final double value;
@@ -54,10 +52,19 @@ class GaleFontSize extends GalePredicate {
   static get xxxxxxl => GaleFontSize(44.0.r);
 }
 
+abstract class IGaleFontSize extends GaleWidget {}
+
+abstract class IGaleFontWeight extends GaleWidget {}
+
+extension FontSizeExtension on IGaleFontSize {
+  double get fontSize => predicates.lastWhere((e) => e is GaleFontSize, orElse: () => GaleFontSize()).value;
+}
+
+extension FontWeightExtension on IGaleFontWeight {
   FontWeight get fontWeight => predicates.lastWhere((e) => e is GaleFontWeight, orElse: () => GaleFontWeight()).value;
 }
 
-class GaleText extends StatelessWidget with hasTextColor, hasFontWeight implements GaleWidget {
+class GaleText extends StatelessWidget implements IGaleFontSize, IGaleFontWeight, IGaleTextColor {
   @override
   late String text;
 
@@ -68,6 +75,6 @@ class GaleText extends StatelessWidget with hasTextColor, hasFontWeight implemen
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: TextStyle(color: textColor, fontWeight: fontWeight));
+    return Text(text, style: TextStyle(color: textColor, fontWeight: fontWeight, fontSize: fontSize));
   }
 }

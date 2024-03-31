@@ -3,7 +3,7 @@ import 'package:gale/core/base.dart';
 import 'package:gale/core/color.dart';
 import 'package:gale/core/widget_base.dart';
 
-class GaleContainer extends StatelessWidget with hasBgColor implements GaleWidget {
+class GaleContainer extends StatelessWidget implements IGaleBgColor {
   late Widget child;
 
   @override
