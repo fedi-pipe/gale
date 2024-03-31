@@ -3,6 +3,25 @@ import 'package:gale/core/base.dart';
 import 'package:gale/core/color.dart';
 import 'package:gale/core/widget_base.dart';
 
+class GaleBoxShadow extends GalePredicate {
+  final List<BoxShadow> value;
+
+  GaleBoxShadow([this.value = const []]) : super(value);
+}
+
+class GaleShadow {
+  static get sm => GaleBoxShadow([BoxShadow(blurRadius: 4, spreadRadius: 2, color: Colors.black.withOpacity(0.1))]);
+  static get md => GaleBoxShadow([BoxShadow(blurRadius: 8, spreadRadius: 4, color: Colors.black.withOpacity(0.1))]);
+  static get lg => GaleBoxShadow([BoxShadow(blurRadius: 16, spreadRadius: 8, color: Colors.black.withOpacity(0.1))]);
+  static get xl => GaleBoxShadow([BoxShadow(blurRadius: 24, spreadRadius: 12, color: Colors.black.withOpacity(0.1))]);
+}
+
+abstract class IGaleBoxShadow extends GaleWidget {}
+
+extension BoxShadowExtension on IGaleBoxShadow {
+  List<BoxShadow> get boxShadow => predicates.lastWhere((e) => e is GaleBoxShadow, orElse: () => GaleBoxShadow()).value;
+}
+
 class GaleBorderRadius extends GalePredicate {
   final BorderRadius value;
 
@@ -25,7 +44,7 @@ extension BorderRadiusExtension on IGaleBorderRadius {
       predicates.lastWhere((e) => e is GaleBorderRadius, orElse: () => GaleBorderRadius()).value;
 }
 
-class GaleContainer extends StatelessWidget implements IGaleBgColor, IGaleBorderRadius {
+class GaleContainer extends StatelessWidget implements IGaleBgColor, IGaleBorderRadius, IGaleBoxShadow {
   late Widget child;
 
   double? width;
@@ -40,11 +59,13 @@ class GaleContainer extends StatelessWidget implements IGaleBgColor, IGaleBorder
       ? BoxDecoration(
           color: bgColor,
           shape: shape,
+          boxShadow: boxShadow,
           borderRadius: borderRadius,
         )
       : BoxDecoration(
           color: bgColor,
           shape: shape,
+          boxShadow: boxShadow,
         );
 
   GaleContainer(
