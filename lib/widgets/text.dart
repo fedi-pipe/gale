@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gale/core/base.dart';
 import 'package:gale/core/color.dart';
 import 'package:gale/core/widget_base.dart';
@@ -34,6 +35,24 @@ class GaleFontWeight extends GalePredicate {
 
 mixin hasFontWeight {
   late List<GalePredicate> predicates;
+class GaleFontSize extends GalePredicate {
+  @override
+  final double value;
+
+  GaleFontSize([this.value = 14.0]) : super(value);
+
+  static get xxs => GaleFontSize(12.0.r);
+  static get xs => GaleFontSize(14.0.r);
+  static get s => GaleFontSize(16.0.r);
+  static get m => GaleFontSize(18.0.r);
+  static get l => GaleFontSize(20.0.r);
+  static get xl => GaleFontSize(24.0.r);
+  static get xxl => GaleFontSize(28.0.r);
+  static get xxxl => GaleFontSize(32.0.r);
+  static get xxxxl => GaleFontSize(36.0.r);
+  static get xxxxxl => GaleFontSize(40.0.r);
+  static get xxxxxxl => GaleFontSize(44.0.r);
+}
 
   FontWeight get fontWeight => predicates.lastWhere((e) => e is GaleFontWeight, orElse: () => GaleFontWeight()).value;
 }
