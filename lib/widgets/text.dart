@@ -78,3 +78,29 @@ class GaleText extends StatelessWidget implements IGaleFontSize, IGaleFontWeight
     return Text(text, style: TextStyle(color: textColor, fontWeight: fontWeight, fontSize: fontSize));
   }
 }
+
+class GaleTypography extends GaleText {
+  GaleTypography({String text = '', List<GalePredicate> predicates = const []})
+      : super(text: text, predicates: predicates);
+
+  static h1({String text = '', List<GalePredicate> predicates = const []}) =>
+      GaleTypography(predicates: [GaleFontSize.xxxxl, GaleFont.bold, ...predicates]);
+  static h2({String text = '', List<GalePredicate> predicates = const []}) =>
+      GaleTypography(predicates: [GaleFontSize.xxxl, GaleFont.bold, ...predicates]);
+  static h3({String text = '', List<GalePredicate> predicates = const []}) =>
+      GaleTypography(predicates: [GaleFontSize.xxl, GaleFont.bold, ...predicates]);
+  static h4({String text = '', List<GalePredicate> predicates = const []}) =>
+      GaleTypography(predicates: [GaleFontSize.xl, GaleFont.bold, ...predicates]);
+  static h5({String text = '', List<GalePredicate> predicates = const []}) =>
+      GaleTypography(predicates: [GaleFontSize.l, GaleFont.bold, ...predicates]);
+  static h6({String text = '', List<GalePredicate> predicates = const []}) =>
+      GaleTypography(predicates: [GaleFontSize.m, GaleFont.bold, ...predicates]);
+  static subtitle1({String text = '', List<GalePredicate> predicates = const []}) =>
+      GaleTypography(predicates: [GaleFontSize.s, GaleFont.normal, ...predicates]);
+  static subtitle2({String text = '', List<GalePredicate> predicates = const []}) =>
+      GaleTypography(predicates: [GaleFontSize.xs, GaleFont.normal, ...predicates]);
+  static body1({String text = '', List<GalePredicate> predicates = const []}) =>
+      GaleTypography(predicates: [GaleFontSize.s, GaleFont.normal, ...predicates]);
+  static body2({String text = '', List<GalePredicate> predicates = const []}) =>
+      GaleTypography(predicates: [GaleFontSize.xs, GaleFont.normal, ...predicates]);
+}
