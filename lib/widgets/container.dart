@@ -3,7 +3,29 @@ import 'package:gale/core/base.dart';
 import 'package:gale/core/color.dart';
 import 'package:gale/core/widget_base.dart';
 
-class GaleContainer extends StatelessWidget implements IGaleBgColor {
+class GaleBorderRadius extends GalePredicate {
+  final BorderRadius value;
+
+  GaleBorderRadius([this.value = GaleBorderRadius.defaultRadius]) : super(value);
+
+  static const defaultRadius = BorderRadius.zero;
+}
+
+class GaleRounded {
+  static get sm => GaleBorderRadius(BorderRadius.circular(8));
+  static get md => GaleBorderRadius(BorderRadius.circular(16));
+  static get lg => GaleBorderRadius(BorderRadius.circular(24));
+  static get xl => GaleBorderRadius(BorderRadius.circular(32));
+}
+
+abstract class IGaleBorderRadius extends GaleWidget {}
+
+extension BorderRadiusExtension on IGaleBorderRadius {
+  BorderRadius get borderRadius =>
+      predicates.lastWhere((e) => e is GaleBorderRadius, orElse: () => GaleBorderRadius()).value;
+}
+
+class GaleContainer extends StatelessWidget implements IGaleBgColor, IGaleBorderRadius {
   late Widget child;
 
   double? width;
@@ -13,6 +35,17 @@ class GaleContainer extends StatelessWidget implements IGaleBgColor {
 
   @override
   late List<GalePredicate> predicates;
+
+  get boxDecoration => shape == BoxShape.rectangle
+      ? BoxDecoration(
+          color: bgColor,
+          shape: shape,
+          borderRadius: borderRadius,
+        )
+      : BoxDecoration(
+          color: bgColor,
+          shape: shape,
+        );
 
   GaleContainer(
       {this.child = GW.defaultChild,
@@ -24,14 +57,7 @@ class GaleContainer extends StatelessWidget implements IGaleBgColor {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: child,
-        decoration: BoxDecoration(
-          color: bgColor,
-          shape: shape,
-        ),
-        width: width,
-        height: height);
+    return Container(child: child, decoration: boxDecoration, width: width, height: height);
   }
 }
 
