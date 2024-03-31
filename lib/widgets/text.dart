@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gale/core/base.dart';
 import 'package:gale/core/color.dart';
 import 'package:gale/core/widget_base.dart';
@@ -39,17 +38,17 @@ class GaleFontSize extends GalePredicate {
 
   GaleFontSize([this.value = 14.0]) : super(value);
 
-  static get xxs => GaleFontSize(12.0.r);
-  static get xs => GaleFontSize(14.0.r);
-  static get s => GaleFontSize(16.0.r);
-  static get m => GaleFontSize(18.0.r);
-  static get l => GaleFontSize(20.0.r);
-  static get xl => GaleFontSize(24.0.r);
-  static get xxl => GaleFontSize(28.0.r);
-  static get xxxl => GaleFontSize(32.0.r);
-  static get xxxxl => GaleFontSize(36.0.r);
-  static get xxxxxl => GaleFontSize(40.0.r);
-  static get xxxxxxl => GaleFontSize(44.0.r);
+  static get xxs => GaleFontSize(12.0);
+  static get xs => GaleFontSize(14.0);
+  static get s => GaleFontSize(16.0);
+  static get m => GaleFontSize(18.0);
+  static get l => GaleFontSize(20.0);
+  static get xl => GaleFontSize(24.0);
+  static get xxl => GaleFontSize(28.0);
+  static get xxxl => GaleFontSize(32.0);
+  static get xxxxl => GaleFontSize(36.0);
+  static get xxxxxl => GaleFontSize(40.0);
+  static get xxxxxxl => GaleFontSize(44.0);
 }
 
 abstract class IGaleFontSize extends GaleWidget {}
@@ -84,23 +83,23 @@ class GaleTypography extends GaleText {
       : super(text: text, predicates: predicates);
 
   static h1({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(predicates: [GaleFontSize.xxxxl, GaleFont.bold, ...predicates]);
+      GaleTypography(text: text, predicates: [GaleFontSize.xxxxl, GaleFont.bold, ...predicates]);
   static h2({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(predicates: [GaleFontSize.xxxl, GaleFont.bold, ...predicates]);
+      GaleTypography(text: text, predicates: [GaleFontSize.xxxl, GaleFont.bold, ...predicates]);
   static h3({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(predicates: [GaleFontSize.xxl, GaleFont.bold, ...predicates]);
+      GaleTypography(text: text, predicates: [GaleFontSize.xxl, GaleFont.bold, ...predicates]);
   static h4({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(predicates: [GaleFontSize.xl, GaleFont.bold, ...predicates]);
+      GaleTypography(text: text, predicates: [GaleFontSize.xl, GaleFont.bold, ...predicates]);
   static h5({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(predicates: [GaleFontSize.l, GaleFont.bold, ...predicates]);
+      GaleTypography(text: text, predicates: [GaleFontSize.l, GaleFont.bold, ...predicates]);
   static h6({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(predicates: [GaleFontSize.m, GaleFont.bold, ...predicates]);
+      GaleTypography(text: text, predicates: [GaleFontSize.m, GaleFont.bold, ...predicates]);
   static subtitle1({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(predicates: [GaleFontSize.s, GaleFont.normal, ...predicates]);
+      GaleTypography(text: text, predicates: [GaleFontSize.s, GaleFont.normal, ...predicates]);
   static subtitle2({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(predicates: [GaleFontSize.xs, GaleFont.normal, ...predicates]);
+      GaleTypography(text: text, predicates: [GaleFontSize.xs, GaleFont.normal, ...predicates]);
   static body1({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(predicates: [GaleFontSize.s, GaleFont.normal, ...predicates]);
+      GaleTypography(text: text, predicates: [GaleFontSize.s, GaleFont.normal, ...predicates]);
   static body2({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(predicates: [GaleFontSize.xs, GaleFont.normal, ...predicates]);
+      GaleTypography(text: text, predicates: [GaleFontSize.xs, GaleFont.normal, ...predicates]);
 }
