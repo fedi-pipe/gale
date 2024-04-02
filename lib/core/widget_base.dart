@@ -12,9 +12,9 @@ class GaleWidget<T extends GaleWidgetStyle> extends StatelessWidget {
 
   late GaleWidgetPredicateGenerator<T>? predicates;
 
-  GaleWidget({this.predicates, super.key});
+  GaleWidget({this.predicates, this.style, super.key});
 
-  late T? style;
+  T? style;
 
   static const defaultChild = GaleWidgetUnit();
   static const defaultColor = Colors.transparent;

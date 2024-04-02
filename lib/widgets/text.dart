@@ -70,7 +70,7 @@ extension FontWeightExtension on IGaleFontWeight {
 }
 
 class GaleTextStyle extends GaleWidgetStyle {
-  GaleTextStyle();
+  const GaleTextStyle();
 
   GaleFontSize get fontSize => GaleFontSize();
   GaleFont get fontWeight => GaleFont();
@@ -85,9 +85,12 @@ class GaleText extends GaleWidget<GaleTextStyle> implements IGaleFontSize, IGale
   late GaleWidgetPredicateGenerator<GaleTextStyle>? predicates;
 
   @override
-  get interpretedPredicates => predicates == null ? predicates!.call(style!) : [];
+  get interpretedPredicates => predicates != null && style != null ? predicates!(style!) : [];
 
-  GaleText({this.text = '', this.predicates, super.key});
+  @override
+  GaleTextStyle? style;
+
+  GaleText({this.text = '', this.predicates, this.style = const GaleTextStyle(), super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +103,7 @@ class GaleTypography extends GaleText {
       : super(text: text, predicates: predicates);
 
   static List<GalePredicate> ensure(GaleWidgetPredicateGenerator<GaleTextStyle>? predicates, GaleTextStyle? style) =>
-      predicates == null ? predicates!(style!) : [];
+      predicates != null ? predicates(style!) : [];
 
   static h1({String text = '', GaleWidgetPredicateGenerator<GaleTextStyle>? predicates}) => GaleTypography(
       text: text, predicates: (style) => [style.fontSize.xxxxl, style.fontWeight.bold, ...ensure(predicates, style)]);

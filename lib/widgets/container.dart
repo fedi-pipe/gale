@@ -47,7 +47,7 @@ extension BorderRadiusExtension on IGaleBorderRadius {
 }
 
 class GaleContainerStyle extends GaleWidgetStyle {
-  GaleContainerStyle();
+  const GaleContainerStyle();
 
   GaleColorBg get bg => GaleColorBg();
   GaleRounded get rounded => GaleRounded();
@@ -77,10 +77,10 @@ class GaleContainer extends GaleWidget<GaleContainerStyle> implements IGaleBgCol
   late GaleWidgetPredicateGenerator<GaleContainerStyle>? predicates;
 
   @override
-  late GaleContainerStyle? style = GaleContainerStyle();
+  final GaleContainerStyle style;
 
   @override
-  get interpretedPredicates => predicates == null ? predicates!.call(style!) : [];
+  get interpretedPredicates => predicates != null && style != null ? predicates!(style!) : [];
 
   get boxDecoration => shape == BoxShape.rectangle
       ? BoxDecoration(
@@ -98,6 +98,7 @@ class GaleContainer extends GaleWidget<GaleContainerStyle> implements IGaleBgCol
   GaleContainer(
       {this.child = GW.defaultChild,
       this.predicates = null,
+      this.style = const GaleContainerStyle(),
       this.shape = BoxShape.rectangle,
       this.width,
       this.height,
@@ -113,6 +114,9 @@ class GaleContainer extends GaleWidget<GaleContainerStyle> implements IGaleBgCol
 ///
 /// Available predicates: Same as [GaleContainer]
 class GaleCircle extends GaleContainer {
-  GaleCircle({Widget child = GW.defaultChild, predicates = null, required double radius})
+  GaleCircle(
+      {Widget child = GW.defaultChild,
+      GaleWidgetPredicateGenerator<GaleContainerStyle>? predicates = null,
+      required double radius})
       : super(child: child, predicates: predicates, shape: BoxShape.circle, width: radius, height: radius);
 }

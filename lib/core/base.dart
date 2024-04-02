@@ -6,7 +6,7 @@ abstract class GalePredicate {
 }
 
 abstract class GaleWidgetStyle {
-  GaleWidgetStyle();
+  const GaleWidgetStyle();
 }
 
 class GaleWidgetUnit extends StatelessWidget {
