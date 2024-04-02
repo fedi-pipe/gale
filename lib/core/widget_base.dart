@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:gale/core/base.dart';
 
-class GaleWidget {
-  late List<GalePredicate> predicates;
+typedef GaleWidgetPredicateGenerator<T extends GaleWidgetStyle> = List<GalePredicate> Function(T);
 
-  GaleWidget({this.predicates = const []});
+abstract class IGaleWidget {
+  List<GalePredicate> get interpretedPredicates;
+}
+
+class GaleWidget<T extends GaleWidgetStyle> extends StatelessWidget {
+  get interpretedPredicates => predicates == null ? predicates!(style!) : [];
+
+  late GaleWidgetPredicateGenerator<T>? predicates;
+
+  GaleWidget({this.predicates, super.key});
+
+  late T? style;
 
   static const defaultChild = GaleWidgetUnit();
   static const defaultColor = Colors.transparent;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
 }
 
 typedef GW = GaleWidget;

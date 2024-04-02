@@ -5,6 +5,10 @@ abstract class GalePredicate {
   GalePredicate(this.value);
 }
 
+abstract class GaleWidgetStyle {
+  GaleWidgetStyle();
+}
+
 class GaleWidgetUnit extends StatelessWidget {
   const GaleWidgetUnit({super.key});
 

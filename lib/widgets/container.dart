@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gale/core/base.dart';
 import 'package:gale/core/color.dart';
 import 'package:gale/core/widget_base.dart';
+import 'package:gale/gale.dart';
 
 class GaleBoxShadow extends GalePredicate {
   final List<BoxShadow> value;
@@ -10,16 +11,17 @@ class GaleBoxShadow extends GalePredicate {
 }
 
 class GaleShadow {
-  static get sm => GaleBoxShadow([BoxShadow(blurRadius: 4, spreadRadius: 2, color: Colors.black.withOpacity(0.1))]);
-  static get md => GaleBoxShadow([BoxShadow(blurRadius: 8, spreadRadius: 4, color: Colors.black.withOpacity(0.1))]);
-  static get lg => GaleBoxShadow([BoxShadow(blurRadius: 16, spreadRadius: 8, color: Colors.black.withOpacity(0.1))]);
-  static get xl => GaleBoxShadow([BoxShadow(blurRadius: 24, spreadRadius: 12, color: Colors.black.withOpacity(0.1))]);
+  get sm => GaleBoxShadow([BoxShadow(blurRadius: 4, spreadRadius: 2, color: Colors.black.withOpacity(0.1))]);
+  get md => GaleBoxShadow([BoxShadow(blurRadius: 8, spreadRadius: 4, color: Colors.black.withOpacity(0.1))]);
+  get lg => GaleBoxShadow([BoxShadow(blurRadius: 16, spreadRadius: 8, color: Colors.black.withOpacity(0.1))]);
+  get xl => GaleBoxShadow([BoxShadow(blurRadius: 24, spreadRadius: 12, color: Colors.black.withOpacity(0.1))]);
 }
 
-abstract class IGaleBoxShadow extends GaleWidget {}
+abstract class IGaleBoxShadow extends IGaleWidget {}
 
 extension BoxShadowExtension on IGaleBoxShadow {
-  List<BoxShadow> get boxShadow => predicates.lastWhere((e) => e is GaleBoxShadow, orElse: () => GaleBoxShadow()).value;
+  List<BoxShadow> get boxShadow =>
+      interpretedPredicates.lastWhere((e) => e is GaleBoxShadow, orElse: () => GaleBoxShadow()).value;
 }
 
 class GaleBorderRadius extends GalePredicate {
@@ -31,20 +33,39 @@ class GaleBorderRadius extends GalePredicate {
 }
 
 class GaleRounded {
-  static get sm => GaleBorderRadius(BorderRadius.circular(8));
-  static get md => GaleBorderRadius(BorderRadius.circular(16));
-  static get lg => GaleBorderRadius(BorderRadius.circular(24));
-  static get xl => GaleBorderRadius(BorderRadius.circular(32));
+  GaleBorderRadius sm = GaleBorderRadius(BorderRadius.circular(8));
+  GaleBorderRadius md = GaleBorderRadius(BorderRadius.circular(16));
+  GaleBorderRadius lg = GaleBorderRadius(BorderRadius.circular(24));
+  GaleBorderRadius xl = GaleBorderRadius(BorderRadius.circular(32));
 }
 
-abstract class IGaleBorderRadius extends GaleWidget {}
+abstract class IGaleBorderRadius extends IGaleWidget {}
 
 extension BorderRadiusExtension on IGaleBorderRadius {
   BorderRadius get borderRadius =>
-      predicates.lastWhere((e) => e is GaleBorderRadius, orElse: () => GaleBorderRadius()).value;
+      interpretedPredicates.lastWhere((e) => e is GaleBorderRadius, orElse: () => GaleBorderRadius()).value;
 }
 
-class GaleContainer extends StatelessWidget implements IGaleBgColor, IGaleBorderRadius, IGaleBoxShadow {
+class GaleContainerStyle extends GaleWidgetStyle {
+  GaleContainerStyle();
+
+  GaleColorBg get bg => GaleColorBg();
+  GaleRounded get rounded => GaleRounded();
+  GaleShadow get shadow => GaleShadow();
+}
+
+typedef GaleContainerPredicateGenerator<T extends GaleWidgetStyle> = GaleWidgetPredicateGenerator<T>;
+
+/// Wrapper class for Container widget
+///
+/// This class is a wrapper for Container widget.
+/// It provides a simple way to create a container based on predicates.
+///
+/// Available predicates:
+/// - [GaleColorBg]
+/// - [GaleBorderRadius]
+/// - [GaleBoxShadow]
+class GaleContainer extends GaleWidget<GaleContainerStyle> implements IGaleBgColor, IGaleBoxShadow, IGaleBorderRadius {
   late Widget child;
 
   double? width;
@@ -53,7 +74,13 @@ class GaleContainer extends StatelessWidget implements IGaleBgColor, IGaleBorder
   late BoxShape shape;
 
   @override
-  late List<GalePredicate> predicates;
+  late GaleWidgetPredicateGenerator<GaleContainerStyle>? predicates;
+
+  @override
+  late GaleContainerStyle? style = GaleContainerStyle();
+
+  @override
+  get interpretedPredicates => predicates == null ? predicates!.call(style!) : [];
 
   get boxDecoration => shape == BoxShape.rectangle
       ? BoxDecoration(
@@ -70,7 +97,7 @@ class GaleContainer extends StatelessWidget implements IGaleBgColor, IGaleBorder
 
   GaleContainer(
       {this.child = GW.defaultChild,
-      this.predicates = const [],
+      this.predicates = null,
       this.shape = BoxShape.rectangle,
       this.width,
       this.height,
@@ -82,7 +109,10 @@ class GaleContainer extends StatelessWidget implements IGaleBgColor, IGaleBorder
   }
 }
 
+/// Wrapper class for [Container] widget with circle shape
+///
+/// Available predicates: Same as [GaleContainer]
 class GaleCircle extends GaleContainer {
-  GaleCircle({Widget child = GW.defaultChild, List<GalePredicate> predicates = const [], required double radius})
+  GaleCircle({Widget child = GW.defaultChild, predicates = null, required double radius})
       : super(child: child, predicates: predicates, shape: BoxShape.circle, width: radius, height: radius);
 }

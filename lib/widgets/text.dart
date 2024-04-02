@@ -4,73 +4,90 @@ import 'package:gale/core/color.dart';
 import 'package:gale/core/widget_base.dart';
 
 class GaleFont {
-  static get thin => GaleFontWeight(FontWeight.w100);
-  static get extraLight => GaleFontWeight(FontWeight.w200);
-  static get light => GaleFontWeight(FontWeight.w300);
-  static get normal => GaleFontWeight(FontWeight.w400);
-  static get medium => GaleFontWeight(FontWeight.w500);
-  static get semibold => GaleFontWeight(FontWeight.w600);
-  static get bold => GaleFontWeight(FontWeight.w700);
-  static get extrabold => GaleFontWeight(FontWeight.w800);
-  static get black => GaleFontWeight(FontWeight.w900);
+  get thin => _GaleFontWeight(FontWeight.w100);
+  get extraLight => _GaleFontWeight(FontWeight.w200);
+  get light => _GaleFontWeight(FontWeight.w300);
+  get normal => _GaleFontWeight(FontWeight.w400);
+  get medium => _GaleFontWeight(FontWeight.w500);
+  get semibold => _GaleFontWeight(FontWeight.w600);
+  get bold => _GaleFontWeight(FontWeight.w700);
+  get extrabold => _GaleFontWeight(FontWeight.w800);
+  get black => _GaleFontWeight(FontWeight.w900);
 }
 
-class GaleFontWeight extends GalePredicate {
+class _GaleFontWeight extends GalePredicate {
   @override
   final FontWeight value;
 
-  GaleFontWeight([this.value = FontWeight.normal]) : super(value);
-
-  static get w100 => GaleFontWeight(FontWeight.w100);
-  static get w200 => GaleFontWeight(FontWeight.w200);
-  static get w300 => GaleFontWeight(FontWeight.w300);
-  static get w400 => GaleFontWeight(FontWeight.w400);
-  static get w500 => GaleFontWeight(FontWeight.w500);
-  static get w600 => GaleFontWeight(FontWeight.w600);
-  static get w700 => GaleFontWeight(FontWeight.w700);
-  static get w800 => GaleFontWeight(FontWeight.w800);
-  static get w900 => GaleFontWeight(FontWeight.w900);
+  _GaleFontWeight([this.value = FontWeight.normal]) : super(value);
 }
 
-class GaleFontSize extends GalePredicate {
+class GaleFontWeight {
+  get w100 => _GaleFontWeight(FontWeight.w100);
+  get w200 => _GaleFontWeight(FontWeight.w200);
+  get w300 => _GaleFontWeight(FontWeight.w300);
+  get w400 => _GaleFontWeight(FontWeight.w400);
+  get w500 => _GaleFontWeight(FontWeight.w500);
+  get w600 => _GaleFontWeight(FontWeight.w600);
+  get w700 => _GaleFontWeight(FontWeight.w700);
+  get w800 => _GaleFontWeight(FontWeight.w800);
+  get w900 => _GaleFontWeight(FontWeight.w900);
+}
+
+class _GaleFontSize extends GalePredicate {
   @override
   final double value;
 
-  GaleFontSize([this.value = 14.0]) : super(value);
-
-  static get xxs => GaleFontSize(12.0);
-  static get xs => GaleFontSize(14.0);
-  static get s => GaleFontSize(16.0);
-  static get m => GaleFontSize(18.0);
-  static get l => GaleFontSize(20.0);
-  static get xl => GaleFontSize(24.0);
-  static get xxl => GaleFontSize(28.0);
-  static get xxxl => GaleFontSize(32.0);
-  static get xxxxl => GaleFontSize(36.0);
-  static get xxxxxl => GaleFontSize(40.0);
-  static get xxxxxxl => GaleFontSize(44.0);
+  _GaleFontSize([this.value = 14.0]) : super(value);
 }
 
-abstract class IGaleFontSize extends GaleWidget {}
+class GaleFontSize {
+  get xxs => _GaleFontSize(12.0);
+  get xs => _GaleFontSize(14.0);
+  get s => _GaleFontSize(16.0);
+  get m => _GaleFontSize(18.0);
+  get l => _GaleFontSize(20.0);
+  get xl => _GaleFontSize(24.0);
+  get xxl => _GaleFontSize(28.0);
+  get xxxl => _GaleFontSize(32.0);
+  get xxxxl => _GaleFontSize(36.0);
+  get xxxxxl => _GaleFontSize(40.0);
+  get xxxxxxl => _GaleFontSize(44.0);
+}
 
-abstract class IGaleFontWeight extends GaleWidget {}
+abstract class IGaleFontSize extends IGaleWidget {}
+
+abstract class IGaleFontWeight extends IGaleWidget {}
 
 extension FontSizeExtension on IGaleFontSize {
-  double get fontSize => predicates.lastWhere((e) => e is GaleFontSize, orElse: () => GaleFontSize()).value;
+  double get fontSize =>
+      interpretedPredicates.lastWhere((e) => e is _GaleFontSize, orElse: () => _GaleFontSize()).value;
 }
 
 extension FontWeightExtension on IGaleFontWeight {
-  FontWeight get fontWeight => predicates.lastWhere((e) => e is GaleFontWeight, orElse: () => GaleFontWeight()).value;
+  FontWeight get fontWeight =>
+      interpretedPredicates.lastWhere((e) => e is _GaleFontWeight, orElse: () => _GaleFontWeight()).value;
 }
 
-class GaleText extends StatelessWidget implements IGaleFontSize, IGaleFontWeight, IGaleTextColor {
+class GaleTextStyle extends GaleWidgetStyle {
+  GaleTextStyle();
+
+  GaleFontSize get fontSize => GaleFontSize();
+  GaleFont get fontWeight => GaleFont();
+  GaleColorText get textColor => GaleColorText();
+}
+
+class GaleText extends GaleWidget<GaleTextStyle> implements IGaleFontSize, IGaleFontWeight, IGaleTextColor {
   @override
   late String text;
 
   @override
-  late List<GalePredicate> predicates;
+  late GaleWidgetPredicateGenerator<GaleTextStyle>? predicates;
 
-  GaleText({this.text = '', this.predicates = const [], super.key});
+  @override
+  get interpretedPredicates => predicates == null ? predicates!.call(style!) : [];
+
+  GaleText({this.text = '', this.predicates, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -79,27 +96,33 @@ class GaleText extends StatelessWidget implements IGaleFontSize, IGaleFontWeight
 }
 
 class GaleTypography extends GaleText {
-  GaleTypography({String text = '', List<GalePredicate> predicates = const []})
+  GaleTypography({String text = '', GaleWidgetPredicateGenerator<GaleTextStyle>? predicates})
       : super(text: text, predicates: predicates);
 
-  static h1({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(text: text, predicates: [GaleFontSize.xxxxl, GaleFont.bold, ...predicates]);
-  static h2({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(text: text, predicates: [GaleFontSize.xxxl, GaleFont.bold, ...predicates]);
-  static h3({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(text: text, predicates: [GaleFontSize.xxl, GaleFont.bold, ...predicates]);
-  static h4({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(text: text, predicates: [GaleFontSize.xl, GaleFont.bold, ...predicates]);
-  static h5({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(text: text, predicates: [GaleFontSize.l, GaleFont.bold, ...predicates]);
-  static h6({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(text: text, predicates: [GaleFontSize.m, GaleFont.bold, ...predicates]);
-  static subtitle1({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(text: text, predicates: [GaleFontSize.s, GaleFont.normal, ...predicates]);
-  static subtitle2({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(text: text, predicates: [GaleFontSize.xs, GaleFont.normal, ...predicates]);
-  static body1({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(text: text, predicates: [GaleFontSize.s, GaleFont.normal, ...predicates]);
-  static body2({String text = '', List<GalePredicate> predicates = const []}) =>
-      GaleTypography(text: text, predicates: [GaleFontSize.xs, GaleFont.normal, ...predicates]);
+  static List<GalePredicate> ensure(GaleWidgetPredicateGenerator<GaleTextStyle>? predicates, GaleTextStyle? style) =>
+      predicates == null ? predicates!(style!) : [];
+
+  static h1({String text = '', GaleWidgetPredicateGenerator<GaleTextStyle>? predicates}) => GaleTypography(
+      text: text, predicates: (style) => [style.fontSize.xxxxl, style.fontWeight.bold, ...ensure(predicates, style)]);
+  static h2({String text = '', GaleWidgetPredicateGenerator<GaleTextStyle>? predicates}) => GaleTypography(
+      text: text, predicates: (style) => [style.fontSize.xxxl, style.fontWeight.bold, ...ensure(predicates, style)]);
+  static h3({String text = '', GaleWidgetPredicateGenerator<GaleTextStyle>? predicates}) => GaleTypography(
+      text: text, predicates: (style) => [style.fontSize.xxl, style.fontWeight.bold, ...ensure(predicates, style)]);
+  static h4({String text = '', GaleWidgetPredicateGenerator<GaleTextStyle>? predicates}) => GaleTypography(
+      text: text, predicates: (style) => [style.fontSize.xl, style.fontWeight.bold, ...ensure(predicates, style)]);
+  static h5({String text = '', GaleWidgetPredicateGenerator<GaleTextStyle>? predicates}) => GaleTypography(
+      text: text, predicates: (style) => [style.fontSize.l, style.fontWeight.bold, ...ensure(predicates, style)]);
+  static h6({String text = '', GaleWidgetPredicateGenerator<GaleTextStyle>? predicates}) => GaleTypography(
+      text: text, predicates: (style) => [style.fontSize.m, style.fontWeight.bold, ...ensure(predicates, style)]);
+  static subtitle1({String text = '', GaleWidgetPredicateGenerator<GaleTextStyle>? predicates}) => GaleTypography(
+      text: text, predicates: (style) => [style.fontSize.s, style.fontWeight.normal, ...ensure(predicates, style)]);
+  static subtitle2({String text = '', GaleWidgetPredicateGenerator<GaleTextStyle>? predicates}) => GaleTypography(
+      text: text, predicates: (style) => [style.fontSize.xs, style.fontWeight.normal, ...ensure(predicates, style)]);
+  static body1({String text = '', GaleWidgetPredicateGenerator<GaleTextStyle>? predicates}) => GaleTypography(
+      text: text, predicates: (style) => [style.fontSize.s, style.fontWeight.normal, ...ensure(predicates, style)]);
+  static body2({String text = '', GaleWidgetPredicateGenerator<GaleTextStyle>? predicates}) => GaleTypography(
+      text: text, predicates: (style) => [style.fontSize.xs, style.fontWeight.normal, ...ensure(predicates, style)]);
 }
+
+final textWidget =
+    GaleTypography.h1(text: 'Hello World', predicates: (style) => [style.textColor.black, style.fontSize.xxl]);
